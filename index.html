@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ギャル語変換ツール</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Interフォントのインポート */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fce4ec; /* 薄いピンクの背景 */
+        }
+        /* カスタムスクロールバー（任意） */
+        textarea::-webkit-scrollbar {
+            width: 8px;
+        }
+        textarea::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        textarea::-webkit-scrollbar-thumb {
+            background: #ff80ab; /* ピンク */
+            border-radius: 10px;
+        }
+        textarea::-webkit-scrollbar-thumb:hover {
+            background: #e06090;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+    <div class="bg-white p-6 rounded-2xl shadow-xl max-w-lg w-full transform transition-all duration-300 hover:scale-105">
+        <h1 class="text-3xl font-extrabold text-pink-500 mb-6 text-center">💖 ギャル語変換ツール 💖</h1>
+
+        <div class="mb-5">
+            <label for="inputText" class="block text-gray-700 text-sm font-bold mb-2">
+                元のテキストを入力してね！
+            </label>
+            <textarea id="inputText"
+                      class="shadow-sm appearance-none border border-pink-300 rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent h-32 resize-none transition-all duration-200"
+                      placeholder="例：こんにちは、元気ですか？今日はとても楽しいです！"></textarea>
+        </div>
+
+        <div class="mb-6 text-center">
+            <button id="convertButton"
+                    class="bg-pink-500 hover:bg-pink-600 text-white font-bold py-3 px-6 rounded-full shadow-lg transform transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:ring-opacity-75">
+                ギャル語に変換するお！✨
+            </button>
+        </div>
+
+        <div>
+            <label for="outputText" class="block text-gray-700 text-sm font-bold mb-2">
+                ギャル語に変換されたよ！
+            </label>
+            <textarea id="outputText"
+                      class="shadow-sm appearance-none border border-pink-300 rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent h-32 resize-none bg-pink-50"
+                      readonly
+                      placeholder="変換結果がここに表示されるよ！"></textarea>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const inputText = document.getElementById('inputText');
+            const convertButton = document.getElementById('convertButton');
+            const outputText = document.getElementById('outputText');
+
+            // ギャル語変換ロジック
+            function convertToGyaru(text) {
+                let convertedText = text;
+
+                // 1. 語尾の変換
+                convertedText = convertedText.replace(/です/g, 'でしゅ');
+                convertedText = convertedText.replace(/ます/g, 'ましゅ');
+                convertedText = convertedText.replace(/ですね/g, 'だおね');
+                convertedText = convertedText.replace(/ね/g, () => Math.random() < 0.5 ? 'だお' : 'じゃん？');
+                convertedText = convertedText.replace(/よ/g, 'よぉ');
+                convertedText = convertedText.replace(/だ！/g, 'だお！');
+                convertedText = convertedText.replace(/です！/g, 'でしゅ！');
+
+                // 2. 強調表現の追加・変換
+                convertedText = convertedText.replace(/本当に/g, 'まじ');
+                convertedText = convertedText.replace(/とても/g, 'ちょー');
+                convertedText = convertedText.replace(/すごく/g, 'ガチ');
+                convertedText = convertedText.replace(/可愛い/g, 'かわちい');
+                convertedText = convertedText.replace(/楽しい/g, 'たのちい');
+                convertedText = convertedText.replace(/すごい/g, 'やばみ');
+                convertedText = convertedText.replace(/嬉しい/g, 'うれぴよ');
+                convertedText = convertedText.replace(/悲しい/g, 'ぴえん');
+                convertedText = convertedText.replace(/おもしろい/g, 'わろた');
+                convertedText = convertedText.replace(/大丈夫/g, 'だいじょぶそ？');
+                convertedText = convertedText.replace(/なるほど/g, 'なるへそ');
+                convertedText = convertedText.replace(/了解/g, 'りょ');
+                convertedText = convertedText.replace(/ありがとう/g, 'あざまる');
+                convertedText = convertedText.replace(/ごめんなさい/g, 'ごめんちゃ');
+                convertedText = convertedText.replace(/頑張る/g, 'がんばるんご');
+
+                // 3. 文末にランダムなギャル語表現を追加
+                const gyaruEndings = ['！', '〜！', 'って感じ？', 'まじ卍', 'しか勝たん！', 'てかさ、', 'みたいな？', '草', 'ワロタ', 'ぴえん'];
+                const sentences = convertedText.split(/(?<=[。！？\n])/); // 句読点や改行で分割
+                convertedText = sentences.map(sentence => {
+                    if (sentence.trim().length > 0) {
+                        // 句読点で終わる場合は追加しないか、置き換える
+                        if (/[。！？]$/.test(sentence.trim())) {
+                            return sentence.trim().replace(/[。！？]$/, gyaruEndings[Math.floor(Math.random() * gyaruEndings.length)]);
+                        } else {
+                            return sentence.trim() + gyaruEndings[Math.floor(Math.random() * gyaruEndings.length)];
+                        }
+                    }
+                    return sentence;
+                }).join('');
+
+                // 4. ランダムな絵文字を追加
+                const emojis = ['💖', '✨', '🥺', '💅', '👑', '✌️', '🌸', '🎀', '💎', '🦄'];
+                if (convertedText.length > 0) {
+                    convertedText += ' ' + emojis[Math.floor(Math.random() * emojis.length)];
+                }
+
+                return convertedText;
+            }
+
+            // 変換ボタンのクリックイベント
+            convertButton.addEventListener('click', () => {
+                const text = inputText.value;
+                if (text.trim() === '') {
+                    outputText.value = '何かテキストを入力してね！🥺';
+                    return;
+                }
+                const converted = convertToGyaru(text);
+                outputText.value = converted;
+            });
+        });
+    </script>
+</body>
+</html>
