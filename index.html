@@ -11,9 +11,9 @@
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #fce4ec; /* 薄いピンクの背景 */
+            background-color: #fce4ec;
         }
-        /* カスタムスクロールバー（任意） */
+        
         textarea::-webkit-scrollbar {
             width: 8px;
         }
@@ -22,7 +22,7 @@
             border-radius: 10px;
         }
         textarea::-webkit-scrollbar-thumb {
-            background: #ff80ab; /* ピンク */
+            background: #ff80ab;
             border-radius: 10px;
         }
         textarea::-webkit-scrollbar-thumb:hover {
@@ -67,71 +67,71 @@
             const convertButton = document.getElementById('convertButton');
             const outputText = document.getElementById('outputText');
 
-            // ギャル語変換ロジック
             function convertToGyaru(text) {
-                let convertedText = text;
+              let t = text;
 
-                // 1. 語尾の変換
-                convertedText = convertedText.replace(/です/g, 'でしゅ');
-                convertedText = convertedText.replace(/ます/g, 'ましゅ');
-                convertedText = convertedText.replace(/ですね/g, 'だおね');
-                convertedText = convertedText.replace(/ね/g, () => Math.random() < 0.5 ? 'だお' : 'じゃん？');
-                convertedText = convertedText.replace(/よ/g, 'よぉ');
-                convertedText = convertedText.replace(/だ！/g, 'だお！');
-                convertedText = convertedText.replace(/です！/g, 'でしゅ！');
 
-                // 2. 強調表現の追加・変換
-                convertedText = convertedText.replace(/本当に/g, 'まじ');
-                convertedText = convertedText.replace(/とても/g, 'ちょー');
-                convertedText = convertedText.replace(/すごく/g, 'ガチ');
-                convertedText = convertedText.replace(/可愛い/g, 'かわちい');
-                convertedText = convertedText.replace(/楽しい/g, 'たのちい');
-                convertedText = convertedText.replace(/すごい/g, 'やばみ');
-                convertedText = convertedText.replace(/嬉しい/g, 'うれぴよ');
-                convertedText = convertedText.replace(/悲しい/g, 'ぴえん');
-                convertedText = convertedText.replace(/おもしろい/g, 'わろた');
-                convertedText = convertedText.replace(/大丈夫/g, 'だいじょぶそ？');
-                convertedText = convertedText.replace(/なるほど/g, 'なるへそ');
-                convertedText = convertedText.replace(/了解/g, 'りょ');
-                convertedText = convertedText.replace(/ありがとう/g, 'あざまる');
-                convertedText = convertedText.replace(/ごめんなさい/g, 'ごめんちゃ');
-                convertedText = convertedText.replace(/頑張る/g, 'がんばるんご');
+              t = t.replace(/ですね/g, 'だおね');
+              t = t.replace(/です！/g, 'でしゅ！');
+              t = t.replace(/です/g, 'でしゅ');
+              t = t.replace(/ます/g, 'ましゅ');
 
-                // 3. 文末にランダムなギャル語表現を追加
-                const gyaruEndings = ['！', '〜！', 'って感じ？', 'まじ卍', 'しか勝たん！', 'てかさ、', 'みたいな？', '草', 'ワロタ', 'ぴえん'];
-                const sentences = convertedText.split(/(?<=[。！？\n])/); // 句読点や改行で分割
-                convertedText = sentences.map(sentence => {
-                    if (sentence.trim().length > 0) {
-                        // 句読点で終わる場合は追加しないか、置き換える
-                        if (/[。！？]$/.test(sentence.trim())) {
-                            return sentence.trim().replace(/[。！？]$/, gyaruEndings[Math.floor(Math.random() * gyaruEndings.length)]);
-                        } else {
-                            return sentence.trim() + gyaruEndings[Math.floor(Math.random() * gyaruEndings.length)];
-                        }
-                    }
-                    return sentence;
-                }).join('');
+              t = t.replace(/ね(?=[。！？\n]|$)/g, () => (Math.random() < 0.5 ? 'だお' : 'じゃん？'));
 
-                // 4. ランダムな絵文字を追加
-                const emojis = ['💖', '✨', '🥺', '💅', '👑', '✌️', '🌸', '🎀', '💎', '🦄'];
-                if (convertedText.length > 0) {
-                    convertedText += ' ' + emojis[Math.floor(Math.random() * emojis.length)];
+              t = t.replace(/よ(?=[。！？\n]|$)/g, 'よぉ');
+
+              t = t.replace(/だ！/g, 'だお！');
+
+              const dict = [
+                [/本当に/g, 'まじ'],
+                [/とても/g, 'ちょー'],
+                [/すごく/g, 'ガチ'],
+                [/すごい/g, 'やばみ'],
+                [/可愛い/g, 'かわちい'],
+                [/楽しい/g, 'たのちい'],
+                [/嬉しい/g, 'うれぴよ'],
+                [/悲しい/g, 'ぴえん'],
+                [/おもしろい/g, 'わろた'],
+                [/大丈夫/g, 'だいじょぶそ？'],
+                [/なるほど/g, 'なるへそ'],
+                [/了解/g, 'りょ'],
+                [/ありがとう/g, 'あざまる'],
+                [/ごめんなさい/g, 'ごめんちゃ'],
+                [/頑張る/g, 'がんばるんご'],
+              ];
+              for (const [re, rep] of dict) t = t.replace(re, rep);
+
+              const endings = ['！', '〜！', 'って感じ？', 'まじ卍', 'しか勝たん！', 'てかさ、', 'みたいな？', '草', 'ワロタ', 'ぴえん'];
+
+              const parts = t.split(/([。！？\n])/);
+              let out = '';
+              for (let i = 0; i < parts.length; i += 2) {
+                const body = (parts[i] ?? '').trim();
+                const sep = parts[i + 1] ?? '';
+                if (!body) continue;
+
+                if (sep === '。' || sep === '！' || sep === '？') {
+                  out += body + endings[Math.floor(Math.random() * endings.length)];
+                } else {
+                  out += body + (sep || endings[Math.floor(Math.random() * endings.length)]);
                 }
+              }
 
-                return convertedText;
-            }
+              const emojis = ['💖', '✨', '🥺', '💅', '👑', '✌️', '🌸', '🎀', '💎', '🦄'];
+                if (out.length > 0) out += ' ' + emojis[Math.floor(Math.random() * emojis.length)];
 
-            // 変換ボタンのクリックイベント
+                return out;
+               }
+
             convertButton.addEventListener('click', () => {
-                const text = inputText.value;
-                if (text.trim() === '') {
-                    outputText.value = '何かテキストを入力してね！🥺';
-                    return;
-                }
-                const converted = convertToGyaru(text);
-                outputText.value = converted;
+               const text = inputText.value;
+               if (text.trim() === '') {
+                outputText.value = '何かテキストを入力してね！🥺';
+                return;
+              }
+                 outputText.value = convertToGyaru(text);
             });
-        });
-    </script>
+         });
+      </script>
 </body>
 </html>
